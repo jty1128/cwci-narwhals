@@ -2,12 +2,12 @@ name: PyTest
 
 on:
   pull_request:
+    branches: [cwci-a091a43fc134d5078ab3-base]
     paths:
       - "**.py"
-      - .github/workflows/pytest.yml
-      - pyproject.toml
-      - uv.lock
-  workflow_call:
+      - ".github/workflows/pytest.yml"
+      - "pyproject.toml"
+      - "uv.lock"
 
 env:
   PY_COLORS: 1
@@ -24,8 +24,8 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.10"]
-        os: [windows-latest, ubuntu-latest]
-    runs-on: ${{ matrix.os }}
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os == 'ubuntu-latest' && 'ubuntu-24.04' || matrix.os }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -41,29 +41,6 @@ jobs:
         shell: bash
         run: make run-ci DEPS="--group tests --group plugins --extra pandas --extra polars --extra pyarrow" CMD="pytest tests --cov=src --cov=tests --cov-fail-under=75 --constructors=pandas,pyarrow,polars[eager],polars[lazy]"
 
-  pytest-windows:
-    if: github.head_ref != 'bump-version'
-    strategy:
-      matrix:
-        python-version: ["3.10", "3.13"]
-        os: [windows-latest]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - name: Install uv
-        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
-        with:
-          python-version: ${{ matrix.python-version }}
-          enable-cache: "true"
-          cache-suffix: pytest-windows-${{ matrix.python-version }}
-          cache-dependency-glob: "pyproject.toml"
-      # we are not testing pyspark, modin, or dask on Windows here because nobody got time for that
-      - name: Run pytest
-        shell: bash
-        run: make run-ci DEPS="--group core-tests --group sklearn --group plugins --extra pandas" CMD="pytest tests --cov=src --cov=tests --runslow --cov-fail-under=95 --durations=30 --constructors=pandas,pandas[nullable],pandas[pyarrow],pyarrow,polars[eager],polars[lazy],duckdb,sqlframe"
-
   pytest-full-coverage:
     if: github.head_ref != 'bump-version'
     strategy:
@@ -73,7 +50,7 @@ jobs:
         include:
           - python-version: "3.11"
             polars_streaming: true
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os == 'ubuntu-latest' && 'ubuntu-24.04' || matrix.os }}
     env:
       NARWHALS_POLARS_NEW_STREAMING: ${{ matrix.polars_streaming == true }}
     steps:
@@ -101,7 +78,7 @@ jobs:
       matrix:
         python-version: ["3.13"]
         os: [ubuntu-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os == 'ubuntu-latest' && 'ubuntu-24.04' || matrix.os }}
     env:
       UV_LOCKED: 0
     steps:
@@ -128,7 +105,7 @@ jobs:
       matrix:
         python-version: ["3.14"]
         os: [ubuntu-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os == 'ubuntu-latest' && 'ubuntu-24.04' || matrix.os }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -149,7 +126,7 @@ jobs:
       matrix:
         python-version: ["3.14t"]
         os: [ubuntu-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os == 'ubuntu-latest' && 'ubuntu-24.04' || matrix.os }}
     env:
         PYTHON_GIL: 0
         UV_LOCKED: 0

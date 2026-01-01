@@ -2,8 +2,7 @@ name: CodeQL
 
 on:
   pull_request:
-  schedule:
-    - cron: '24 7 * * 3'
+    branches: [cwci-a091a43fc134d5078ab3-base]
 
 permissions:
   contents: read
@@ -11,11 +10,10 @@ permissions:
 jobs:
   analyze:
     name: Analyze
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       actions: read
       contents: read
-      security-events: write
 
     strategy:
       fail-fast: false
@@ -39,4 +37,5 @@ jobs:
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@cdf488f595d80d6e07e03d4674febd5ab45fa938 # v4.37.9
         with:
+          upload: never
           category: "/language:${{ matrix.language }}"

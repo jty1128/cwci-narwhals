@@ -2,16 +2,12 @@ name: Test Downstream Libraries - Fast
 
 on:
   pull_request:
+    branches: [cwci-a091a43fc134d5078ab3-base]
     paths:
-      - src/**
-      - .github/workflows/downstream_tests.yml
-      - pyproject.toml
-      - uv.lock
-  workflow_call:
-    inputs:
-      skip-fairlearn:
-        type: boolean
-        default: false
+      - "src/**"
+      - ".github/workflows/downstream_tests.yml"
+      - "pyproject.toml"
+      - "uv.lock"
 
 env:
   PY_COLORS: 1
@@ -29,7 +25,7 @@ jobs:
         python-version: ["3.12"]
         os: [ubuntu-latest]
 
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os == 'ubuntu-latest' && 'ubuntu-24.04' || matrix.os }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -78,7 +74,7 @@ jobs:
         os: [ubuntu-latest]
         dependencies: ["core,optional"]
 
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os == 'ubuntu-latest' && 'ubuntu-24.04' || matrix.os }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -128,7 +124,7 @@ jobs:
         python-version: ["3.11"]
         os: [ubuntu-latest]
 
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os == 'ubuntu-latest' && 'ubuntu-24.04' || matrix.os }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -170,7 +166,7 @@ jobs:
         python-version: ["3.12"]
         os: [ubuntu-latest]
 
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os == 'ubuntu-latest' && 'ubuntu-24.04' || matrix.os }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -223,7 +219,7 @@ jobs:
       matrix:
         python-version: ["3.12"]
         os: [ubuntu-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os == 'ubuntu-latest' && 'ubuntu-24.04' || matrix.os }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -272,7 +268,7 @@ jobs:
         python-version: ["3.12"]
         os: [ubuntu-latest]
 
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os == 'ubuntu-latest' && 'ubuntu-24.04' || matrix.os }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -316,7 +312,7 @@ jobs:
         python-version: ["3.12"]
         os: [ubuntu-latest]
 
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os == 'ubuntu-latest' && 'ubuntu-24.04' || matrix.os }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -366,7 +362,7 @@ jobs:
         python-version: ["3.12"]
         os: [ubuntu-latest]
 
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os == 'ubuntu-latest' && 'ubuntu-24.04' || matrix.os }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -411,7 +407,7 @@ jobs:
         python-version: ["3.12"]
         os: [ubuntu-latest]
 
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os == 'ubuntu-latest' && 'ubuntu-24.04' || matrix.os }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -458,7 +454,7 @@ jobs:
       matrix:
         python-version: ["3.12"]
         os: [ubuntu-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os == 'ubuntu-latest' && 'ubuntu-24.04' || matrix.os }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -518,7 +514,7 @@ jobs:
       matrix:
         python-version: ["3.10", "3.13"] # these are enough to cover all the tests
         os: ["ubuntu-latest"]
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os == 'ubuntu-latest' && 'ubuntu-24.04' || matrix.os }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -570,7 +566,7 @@ jobs:
       matrix:
         python-version: ["3.12"]
         os: ["ubuntu-latest"]
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os == 'ubuntu-latest' && 'ubuntu-24.04' || matrix.os }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -618,7 +614,7 @@ jobs:
         python-version: ["3.12"]
         os: [ubuntu-latest]
 
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os == 'ubuntu-latest' && 'ubuntu-24.04' || matrix.os }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -664,7 +660,7 @@ jobs:
         python-version: ["3.12"]
         os: [ubuntu-latest]
 
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os == 'ubuntu-latest' && 'ubuntu-24.04' || matrix.os }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -708,7 +704,7 @@ jobs:
         python-version: ["3.12"]
         os: [ubuntu-latest]
 
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os == 'ubuntu-latest' && 'ubuntu-24.04' || matrix.os }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -760,7 +756,7 @@ jobs:
       matrix:
         python-version: ["3.12"]
         os: [ubuntu-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os == 'ubuntu-latest' && 'ubuntu-24.04' || matrix.os }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
