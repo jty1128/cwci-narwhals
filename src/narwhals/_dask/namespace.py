@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import operator
 from datetime import date, datetime
-from functools import reduce
+from functools import partial, reduce
 from itertools import chain
 from typing import TYPE_CHECKING, Any, cast
 
@@ -22,6 +22,7 @@ from narwhals._expression_parsing import (
     combine_alias_output_names,
     combine_evaluate_output_names,
 )
+from narwhals._pandas_like.utils import native_to_narwhals_dtype
 from narwhals._utils import (
     Implementation,
     ensure_path_source,
@@ -247,12 +248,27 @@ class DaskNamespace(
     def concat_str(
         self, *exprs: DaskExpr, separator: str, ignore_nulls: bool
     ) -> DaskExpr:
+        to_nw_dtype = partial(
+            native_to_narwhals_dtype,
+            version=self._version,
+            implementation=self._implementation,
+        )
+
+        def to_string(s: dx.Series) -> dx.Series:
+            result = s.astype(str)
+            if to_nw_dtype(s.dtype).is_boolean():
+                # NOTE: Polars renders booleans lowercase, pandas `astype(str)` does not.
+                return result.str.lower()
+            return result
+
         def func(df: DaskLazyFrame) -> list[dx.Series]:
-            expr_results = [s for _expr in exprs for s in _expr(df)]
-            series = (
-                s.astype(str) for s in align_series_full_broadcast(df, *expr_results)
+            expr_results = align_series_full_broadcast(
+                df, *(s for _expr in exprs for s in _expr(df))
             )
-            null_mask = [s.isna() for s in align_series_full_broadcast(df, *expr_results)]
+            # pandas 2.0 cannot concatenate empty Arrow-string metadata. Cast to str
+            # instead; the pre-cast masks below restore or skip nulls.
+            series = (to_string(s) for s in expr_results)
+            null_mask = [s.isna() for s in expr_results]
 
             if not ignore_nulls:
                 null_mask_result = reduce(operator.or_, null_mask)
